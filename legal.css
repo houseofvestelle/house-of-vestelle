@@ -1,0 +1,143 @@
+/* House of Vestelle — shared styling for legal / policy pages (Orangerie) */
+:root{
+  --ivory:#FAF6EE; --plaster:#F2E9DB; --ink:#241F19; --sub:#7A6A57;
+  --emerald:#122B23; --gold:#C5A059; --gold-lo:#A98740; --gold-hi:#E3C684; --blush:#E7CFC4;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+body{
+  min-height:100vh;
+  color:var(--ink);
+  font-family:'EB Garamond',Georgia,serif;
+  font-size:17.5px; line-height:1.75;
+  background:
+    radial-gradient(120% 70% at 50% -10%, #FFFEF9 0%, transparent 55%),
+    var(--ivory);
+  background-attachment:fixed;
+  display:flex; flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Header */
+header{
+  text-align:center; padding:46px 24px 0;
+}
+header a.brand{
+  font-family:'Italiana',serif; font-size:30px; letter-spacing:0.04em;
+  color:var(--ink); text-decoration:none; display:inline-block;
+}
+header .houseof{
+  font-family:'Marcellus',serif; font-size:10px; letter-spacing:0.42em;
+  text-transform:uppercase; color:var(--gold-lo); padding-left:0.42em; margin-bottom:6px;
+}
+header .toprule{
+  width:120px; height:2px; margin:22px auto 0;
+  background:linear-gradient(90deg,transparent,var(--gold-lo),var(--gold-hi),var(--gold-lo),transparent);
+}
+
+/* Body column */
+main{ flex:1 0 auto; }
+.wrap{ max-width:760px; margin:0 auto; padding:44px 28px 72px; }
+
+.eyebrow{
+  font-family:'Marcellus',serif; font-size:11.5px; letter-spacing:0.34em;
+  text-transform:uppercase; color:var(--gold-lo); margin-bottom:14px;
+}
+h1{
+  font-family:'Italiana',serif; font-weight:400;
+  font-size:clamp(38px,7vw,60px); line-height:1.05; letter-spacing:0.01em; color:var(--ink);
+}
+.meta{
+  font-family:'Marcellus',serif; font-size:11px; letter-spacing:0.16em; text-transform:uppercase;
+  color:var(--sub); margin-top:18px;
+}
+.lede{
+  font-size:19px; line-height:1.7; color:var(--ink); margin:26px 0 8px;
+}
+.lede em{ color:var(--gold-lo); font-style:italic; }
+
+h2{
+  font-family:'Italiana',serif; font-weight:400; font-size:27px; line-height:1.2;
+  color:var(--ink); margin:42px 0 4px;
+}
+h2 .num{ color:var(--gold); font-size:20px; margin-right:10px; }
+h3{
+  font-family:'Marcellus',serif; font-weight:400; font-size:13px; letter-spacing:0.14em;
+  text-transform:uppercase; color:var(--gold-lo); margin:26px 0 6px;
+}
+.titlerule{
+  width:54px; height:2px; margin:10px 0 0;
+  background:linear-gradient(90deg,var(--gold-lo),var(--gold-hi) 60%,var(--gold));
+}
+p{ margin:12px 0; }
+strong{ font-weight:600; }
+em{ font-style:italic; }
+a{ color:var(--gold-lo); text-decoration:underline; text-underline-offset:2px; text-decoration-thickness:0.5px; }
+a:hover{ color:var(--ink); }
+
+ul,ol{ margin:12px 0 12px; padding-left:2px; list-style:none; }
+li{ position:relative; padding:6px 0 6px 26px; }
+ul li::before{ content:'\2726'; position:absolute; left:2px; top:9px; color:var(--gold); font-size:11px; }
+ol{ counter-reset:o; }
+ol li{ counter-increment:o; }
+ol li::before{
+  content:counter(o,decimal-leading-zero); position:absolute; left:0; top:8px;
+  font-family:'Marcellus',serif; color:var(--gold-lo); font-size:12px; letter-spacing:.04em;
+}
+
+/* Callout / highlight box */
+.callout{
+  background:var(--plaster); border:1px solid rgba(197,160,89,0.45);
+  border-left:3px solid var(--gold); padding:16px 22px; margin:22px 0;
+}
+.callout p:first-child{ margin-top:0; } .callout p:last-child{ margin-bottom:0; }
+
+/* The required Amazon sentence — set apart */
+.required{
+  background:var(--emerald); color:var(--ivory);
+  border:1px solid var(--gold); border-radius:2px;
+  padding:20px 24px; margin:24px 0;
+  font-family:'Italiana',serif; font-size:21px; line-height:1.45; text-align:center;
+}
+.required .src{
+  display:block; margin-top:10px;
+  font-family:'Marcellus',serif; font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:var(--gold-hi);
+}
+
+/* Jewel footer */
+footer{
+  flex-shrink:0; background:var(--emerald); color:var(--ivory);
+  border-top:1.5px solid var(--gold); text-align:center; padding:34px 24px 30px;
+}
+footer .fwordmark{
+  font-family:'Italiana',serif; font-size:21px; letter-spacing:0.05em; color:var(--gold-hi); margin-bottom:16px;
+}
+footer nav{ margin-bottom:16px; }
+footer nav a{
+  font-family:'Marcellus',serif; font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--gold); text-decoration:none; margin:0 12px; display:inline-block; line-height:2;
+}
+footer nav a:hover{ color:var(--gold-hi); }
+footer .social a{ font-family:'Marcellus',serif; font-size:11px; letter-spacing:0.16em; color:var(--gold); text-decoration:none; }
+footer .copyright{
+  margin-top:14px; font-family:'Marcellus',serif; font-size:9.5px; letter-spacing:0.24em; text-transform:uppercase;
+  color:rgba(250,246,238,0.5);
+}
+
+@media (max-width:520px){
+  body{ font-size:17px; }
+  .wrap{ padding:34px 22px 56px; }
+  footer nav a{ margin:0 8px; }
+}
+
+/* Print / PDF — flatten the screen layout into clean paged output */
+@media print{
+  body{ display:block; min-height:0; background:var(--ivory);
+        -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  header{ padding:18px 24px 0; }
+  .wrap{ max-width:100%; padding:18px 18px 30px; }
+  footer{ margin-top:28px; }
+  h1,h2,h3{ break-after:avoid; page-break-after:avoid; }
+  li,.callout,.required,.meta{ break-inside:avoid; page-break-inside:avoid; }
+  a{ color:var(--ink); text-decoration:none; }
+}

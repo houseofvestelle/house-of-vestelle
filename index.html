@@ -117,18 +117,19 @@
     font-family:'Marcellus',serif; font-size:10.5px; letter-spacing:0.34em;
     text-transform:uppercase; color:var(--gold-lo); margin-bottom:16px;
   }
-  form{ display:flex; gap:10px; }
-  input[type=email]{
+  form{ display:flex; flex-direction:column; gap:14px; }
+  .fields{ display:flex; gap:14px; }
+  input[type=text], input[type=email]{
     flex:1; min-width:0;
     font-family:'EB Garamond',serif; font-size:16px; color:var(--ink);
     background:transparent; border:none; border-bottom:1.5px solid rgba(197,160,89,0.55);
     padding:10px 4px; outline:none; transition:border-color .25s ease;
   }
-  input[type=email]::placeholder{ color:var(--sub); opacity:0.8; }
-  input[type=email]:focus{ border-bottom-color:var(--gold); }
+  input[type=text]::placeholder, input[type=email]::placeholder{ color:var(--sub); opacity:0.8; }
+  input[type=text]:focus, input[type=email]:focus{ border-bottom-color:var(--gold); }
 
   button{
-    flex:none; cursor:pointer;
+    width:100%; cursor:pointer;
     font-family:'Marcellus',serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase;
     color:var(--ivory); background:var(--emerald);
     border:1px solid transparent; border-radius:2px;
@@ -196,8 +197,8 @@
   }
 
   @media (max-width:520px){
-    form{ flex-direction:column; }
-    button{ width:100%; padding:14px; }
+    .fields{ flex-direction:column; gap:16px; }
+    button{ padding:14px; }
     main{ padding:56px 24px 40px; }
   }
 </style>
@@ -238,7 +239,10 @@
       <div class="invite" id="invite">
         <div class="invite-label">By invitation</div>
         <form id="signup" novalidate>
-          <input type="email" id="email" name="email" placeholder="Your email address" autocomplete="email" required aria-label="Your email address">
+          <div class="fields">
+            <input type="text" id="firstName" name="firstName" placeholder="First name" autocomplete="given-name" aria-label="First name">
+            <input type="email" id="email" name="email" placeholder="Your email address" autocomplete="email" required aria-label="Your email address">
+          </div>
           <button type="submit" id="submit">Request Invitation</button>
         </form>
         <p class="note">Be the first through the door.</p>
@@ -269,10 +273,11 @@
     // even if this ever fails, so a guest is never turned away.
     const FORM_ENDPOINT = "/api/subscribe";
 
-    const wrap   = document.getElementById('invite');
-    const form   = document.getElementById('signup');
-    const email  = document.getElementById('email');
-    const button = document.getElementById('submit');
+    const wrap      = document.getElementById('invite');
+    const form      = document.getElementById('signup');
+    const firstName = document.getElementById('firstName');
+    const email     = document.getElementById('email');
+    const button    = document.getElementById('submit');
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -290,7 +295,7 @@
           await fetch(FORM_ENDPOINT, {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: value })
+            body: JSON.stringify({ email: value, firstName: firstName.value.trim() })
           });
         }
       } catch (err) {

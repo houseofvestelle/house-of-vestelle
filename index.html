@@ -263,11 +263,11 @@
   </footer>
 
   <script>
-    // Where new emails are sent. Leave blank until the form service is connected —
-    // the page still shows the elegant confirmation, so it is never broken.
-    // To go live with real capture: paste your Formspree endpoint here,
-    // e.g. "https://formspree.io/f/abcdwxyz"
-    const FORM_ENDPOINT = "";
+    // Where new emails are sent — our own catcher function (api/subscribe.js),
+    // which creates the contact in GoHighLevel tagged "HOV" with DND on.
+    // Same origin, so no CORS. The page still shows the elegant confirmation
+    // even if this ever fails, so a guest is never turned away.
+    const FORM_ENDPOINT = "/api/subscribe";
 
     const wrap   = document.getElementById('invite');
     const form   = document.getElementById('signup');

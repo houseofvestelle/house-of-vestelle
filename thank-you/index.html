@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You're on the list — House of Vestelle</title>
+<meta name="description" content="Your invitation to House of Vestelle is reserved.">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#FAF6EE">
+
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=EB+Garamond:ital,wght@0,400..600;1,400..600&family=Marcellus&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ivory:#FAF6EE; --plaster:#F2E9DB; --ink:#241F19; --sub:#7A6A57;
+    --emerald:#122B23; --gold:#C5A059; --gold-lo:#A98740; --gold-hi:#E3C684; --blush:#E7CFC4;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    min-height:100vh;
+    color:var(--ink);
+    font-family:'EB Garamond',Georgia,serif;
+    background:
+      radial-gradient(125% 85% at 50% -12%, #FFFEF9 0%, transparent 55%),
+      radial-gradient(100% 70% at 82% 112%, rgba(231,207,196,0.30) 0%, transparent 58%),
+      radial-gradient(90% 60% at 12% 105%, rgba(197,160,89,0.10) 0%, transparent 60%),
+      var(--ivory);
+    background-attachment:fixed;
+    display:flex; flex-direction:column;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* Limewash grain overlay */
+  .grain{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ── Gold-leaf confetti: one gentle pass, then done ── */
+  .petals{ position:fixed; inset:0; z-index:2; pointer-events:none; overflow:hidden; }
+  .petal{
+    position:absolute; top:-4vh;
+    width:9px; height:14px; border-radius:60% 40% 55% 45% / 55% 55% 45% 45%;
+    background:linear-gradient(135deg,var(--gold-hi),var(--gold) 55%,var(--gold-lo));
+    opacity:0;
+    animation:fall var(--dur) ease-in var(--delay) 1 both;
+  }
+  .petal:nth-child(even){ border-radius:50%; width:7px; height:7px; }
+  @keyframes fall{
+    0%{ opacity:0; transform:translate3d(0,-4vh,0) rotate(0deg); }
+    8%{ opacity:0.9; }
+    82%{ opacity:0.75; }
+    100%{ opacity:0; transform:translate3d(var(--drift),104vh,0) rotate(var(--spin)); }
+  }
+
+  main{
+    position:relative; z-index:1;
+    flex:1 0 auto;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    text-align:center;
+    padding:64px 28px 56px;
+  }
+
+  .hero{ position:relative; width:100%; max-width:640px; }
+
+  /* ── The wax seal: stamps itself on arrival ── */
+  .seal{
+    width:96px; height:96px; margin:0 auto 26px;
+    position:relative;
+    opacity:0;
+    animation:stamp .55s cubic-bezier(.2,1.4,.4,1) .35s forwards;
+  }
+  .seal svg{ width:100%; height:100%; display:block; filter:drop-shadow(0 5px 14px rgba(18,43,35,0.28)); }
+  /* the pressed-wax ring that puffs out when it lands */
+  .seal::after{
+    content:''; position:absolute; inset:-6px; border-radius:50%;
+    border:1.5px solid rgba(197,160,89,0.65);
+    opacity:0; transform:scale(0.7);
+    animation:ring .7s ease-out .78s forwards;
+  }
+  @keyframes stamp{
+    0%{ opacity:0; transform:scale(1.9) rotate(-14deg); }
+    70%{ opacity:1; transform:scale(0.94) rotate(2deg); }
+    100%{ opacity:1; transform:scale(1) rotate(0deg); }
+  }
+  @keyframes ring{
+    0%{ opacity:0.9; transform:scale(0.7); }
+    100%{ opacity:0; transform:scale(1.35); }
+  }
+
+  .eyebrow{
+    font-family:'Marcellus',serif; font-size:12px; letter-spacing:0.46em;
+    text-transform:uppercase; color:var(--gold-lo);
+    padding-left:0.46em; margin-bottom:20px;
+    opacity:0; animation:rise .8s ease-out .55s forwards;
+  }
+
+  h1{
+    font-family:'Italiana',serif; font-weight:400;
+    font-size:clamp(46px,9.5vw,86px); line-height:1.02; letter-spacing:0.02em;
+    color:var(--ink);
+    opacity:0; animation:rise .9s ease-out .68s forwards;
+  }
+
+  .rule{
+    position:relative; overflow:hidden;
+    width:168px; height:2px; margin:28px auto 24px;
+    background:linear-gradient(90deg,transparent,var(--gold-lo) 22%,var(--gold-hi) 50%,var(--gold-lo) 78%,transparent);
+    opacity:0; animation:rise .8s ease-out .8s forwards;
+  }
+  .rule::after{
+    content:''; position:absolute; top:0; left:-40%; width:40%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.85),transparent);
+    transform:skewX(-20deg);
+    animation:sweep 1.6s ease-in-out 1.5s 1 both;
+  }
+
+  .tagline{
+    font-family:'EB Garamond',serif; font-style:italic; font-weight:400;
+    font-size:clamp(19px,3.1vw,24px); color:var(--ink);
+    opacity:0; animation:rise .8s ease-out .9s forwards;
+  }
+
+  /* ── Invitation number ── */
+  .invno{
+    display:inline-block; margin-top:22px; padding:9px 22px;
+    border:1px solid rgba(197,160,89,0.5); border-radius:2px;
+    font-family:'Marcellus',serif; font-size:12px; letter-spacing:0.32em; text-transform:uppercase;
+    color:var(--gold-lo); background:rgba(255,255,255,0.35);
+    opacity:0; animation:rise .8s ease-out 1.02s forwards;
+  }
+  .invno b{ font-weight:400; color:var(--ink); font-variant-numeric:tabular-nums; }
+
+  /* ── What happens next ── */
+  .next{
+    margin:52px auto 0; width:100%; max-width:520px; text-align:left;
+    opacity:0; animation:rise .8s ease-out 1.18s forwards;
+  }
+  .next-label{
+    font-family:'Marcellus',serif; font-size:10.5px; letter-spacing:0.34em;
+    text-transform:uppercase; color:var(--gold-lo); text-align:center; margin-bottom:22px;
+  }
+  .step{
+    display:flex; align-items:baseline; gap:18px;
+    padding:15px 4px; border-top:1px solid rgba(197,160,89,0.28);
+  }
+  .step:last-child{ border-bottom:1px solid rgba(197,160,89,0.28); }
+  .step .n{
+    flex:none; font-family:'Italiana',serif; font-size:24px; color:var(--gold); line-height:1;
+    min-width:26px; text-align:center;
+  }
+  .step p{ font-size:17px; line-height:1.5; }
+  .step p em{ color:var(--sub); }
+
+  /* ── While you wait ── */
+  .wait{
+    margin-top:44px;
+    display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+    opacity:0; animation:rise .8s ease-out 1.32s forwards;
+  }
+  .btn{
+    display:inline-block; cursor:pointer; text-decoration:none;
+    font-family:'Marcellus',serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase;
+    border-radius:2px; padding:13px 24px;
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease, background .25s ease;
+  }
+  .btn-emerald{ color:var(--ivory); background:var(--emerald); border:1px solid transparent; }
+  .btn-emerald:hover{ transform:translateY(-2px); border-color:var(--gold); box-shadow:0 6px 22px rgba(18,43,35,0.20); }
+  .btn-gold{ color:var(--gold-lo); background:transparent; border:1px solid rgba(197,160,89,0.6); }
+  .btn-gold:hover{ transform:translateY(-2px); border-color:var(--gold); background:rgba(197,160,89,0.08); }
+
+  .whisper{
+    margin-top:26px; font-size:14.5px; font-style:italic; color:var(--sub);
+    opacity:0; animation:rise .8s ease-out 1.44s forwards;
+  }
+  .whisper a{ color:var(--gold-lo); }
+
+  /* The jewel — one emerald band per page */
+  footer{
+    position:relative; z-index:1; flex-shrink:0;
+    background:var(--emerald); color:var(--ivory);
+    border-top:1.5px solid var(--gold);
+    text-align:center; padding:30px 24px;
+  }
+  .fwordmark{
+    font-family:'Italiana',serif; font-size:21px; letter-spacing:0.05em; color:var(--gold-hi);
+    margin-bottom:14px;
+  }
+  .legalnav{ margin-bottom:13px; }
+  .legalnav a{
+    font-family:'Marcellus',serif; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--gold); text-decoration:none; margin:0 10px; display:inline-block; line-height:1.9;
+    transition:color .25s ease;
+  }
+  .legalnav a:hover{ color:var(--gold-hi); }
+  .social a{
+    font-family:'Marcellus',serif; font-size:12px; letter-spacing:0.16em;
+    color:var(--gold); text-decoration:none; transition:color .25s ease;
+  }
+  .social a:hover{ color:var(--gold-hi); }
+  .copyright{
+    margin-top:14px;
+    font-family:'Marcellus',serif; font-size:9.5px; letter-spacing:0.26em; text-transform:uppercase;
+    color:rgba(250,246,238,0.5);
+  }
+
+  @keyframes rise{ from{ opacity:0; transform:translateY(20px); } to{ opacity:1; transform:translateY(0); } }
+  @keyframes sweep{ from{ left:-40%; } to{ left:140%; } }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; }
+    .seal,.eyebrow,h1,.rule,.tagline,.invno,.next,.wait,.whisper{ opacity:1; }
+    .petals{ display:none; }
+  }
+
+  @media (max-width:520px){
+    main{ padding:52px 24px 44px; }
+    .wait{ flex-direction:column; align-items:stretch; }
+    .btn{ text-align:center; padding:14px; }
+  }
+</style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="petals" id="petals" aria-hidden="true"></div>
+
+  <main>
+    <div class="hero">
+
+      <!-- wax seal, freshly pressed -->
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 96 96" fill="none">
+          <circle cx="48" cy="48" r="46" fill="#122B23"/>
+          <circle cx="48" cy="48" r="46" fill="none" stroke="#C5A059" stroke-width="1.4"/>
+          <circle cx="48" cy="48" r="38.5" fill="none" stroke="#C5A059" stroke-width="0.8" stroke-dasharray="2.5 3.5" opacity="0.85"/>
+          <!-- irregular wax edge -->
+          <path d="M48 4 C60 3 73 8 81 17 C90 26 93 37 92 48 C93 60 88 72 79 80 C70 89 60 93 48 92 C36 93 25 88 16 79 C8 71 3 60 4 48 C3 36 8 24 17 16 C25 8 36 3 48 4 Z"
+                fill="none" stroke="#C5A059" stroke-width="0.6" opacity="0.5"/>
+          <text x="48" y="63" text-anchor="middle"
+                font-family="Italiana, serif" font-size="42" fill="#E3C684" letter-spacing="1">V</text>
+        </svg>
+      </div>
+
+      <div class="eyebrow">Consider it sealed</div>
+      <h1>You're on<br>the list.</h1>
+      <div class="rule"></div>
+      <p class="tagline">And not just any list — <em>the</em> list.</p>
+
+      <div class="invno">Invitation&nbsp;№&nbsp;<b id="invno">···</b></div>
+
+      <div class="next">
+        <div class="next-label">What happens next</div>
+        <div class="step">
+          <div class="n">I.</div>
+          <p>We finish dressing the house. <em>Hems are being pinned as we speak.</em></p>
+        </div>
+        <div class="step">
+          <div class="n">II.</div>
+          <p>You receive first word — <em>before the doors open to anyone else.</em></p>
+        </div>
+        <div class="step">
+          <div class="n">III.</div>
+          <p>The doors open, and you walk in <em>like you own the place.</em></p>
+        </div>
+      </div>
+
+      <div class="wait">
+        <a class="btn btn-emerald" href="https://instagram.com/houseofvestelle" target="_blank" rel="noopener">Follow the House</a>
+        <button class="btn btn-gold" id="share" type="button">Whisper to a Friend</button>
+      </div>
+
+      <p class="whisper">The best rooms are the ones you hear about from a friend.</p>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="fwordmark">Vestelle</div>
+    <nav class="legalnav">
+      <a href="/privacy-policy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+      <a href="/affiliate-disclosure/">Affiliate Disclosure</a>
+    </nav>
+    <div class="social">
+      <a href="https://instagram.com/houseofvestelle" target="_blank" rel="noopener">@houseofvestelle</a>
+    </div>
+    <div class="copyright">© 2026 House of Vestelle</div>
+  </footer>
+
+  <script>
+    // ── Gold-leaf confetti: one elegant pass, ~30 petals, then the sky clears ──
+    (function(){
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var box = document.getElementById('petals');
+      for (var i = 0; i < 30; i++){
+        var p = document.createElement('span');
+        p.className = 'petal';
+        p.style.left = (Math.random() * 100) + 'vw';
+        p.style.setProperty('--dur',   (4.5 + Math.random() * 3.5) + 's');
+        p.style.setProperty('--delay', (Math.random() * 1.8) + 's');
+        p.style.setProperty('--drift', ((Math.random() * 16) - 8) + 'vw');
+        p.style.setProperty('--spin',  (180 + Math.random() * 540) + 'deg');
+        box.appendChild(p);
+      }
+      // remove the layer once the last petal has landed
+      setTimeout(function(){ box.remove(); }, 11000);
+    })();
+
+    // ── Invitation number: spins, then settles — and stays yours on revisit ──
+    (function(){
+      var el = document.getElementById('invno');
+      var final;
+      try { final = localStorage.getItem('hov-invno'); } catch(e){}
+      if (!final){
+        final = String(Math.floor(47 + Math.random() * 400)).padStart(3, '0');
+        try { localStorage.setItem('hov-invno', final); } catch(e){}
+      }
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        el.textContent = final; return;
+      }
+      var ticks = 0, max = 22;
+      var spin = setInterval(function(){
+        ticks++;
+        if (ticks >= max){
+          clearInterval(spin);
+          el.textContent = final;
+          return;
+        }
+        var flick = Math.floor(Math.random() * 900) + 100;
+        if (flick === 666) flick = 667; // no unfortunate flashes on an elegant invitation
+        el.textContent = String(flick);
+      }, 55 + ticks * 2);
+    })();
+
+    // ── Whisper to a friend: share sheet where it exists, copy link where it doesn't ──
+    (function(){
+      var btn = document.getElementById('share');
+      var url = 'https://houseofvestelle.com';
+      btn.addEventListener('click', function(){
+        if (navigator.share){
+          navigator.share({
+            title: 'House of Vestelle',
+            text: 'The wardrobe, curated. I just reserved an invitation — thought of you.',
+            url: url
+          }).catch(function(){});
+          return;
+        }
+        var done = function(){
+          var old = btn.textContent;
+          btn.textContent = 'Link Copied — Do Tell';
+          setTimeout(function(){ btn.textContent = old; }, 2600);
+        };
+        var legacyCopy = function(){
+          var t = document.createElement('textarea');
+          t.value = url;
+          t.style.position = 'fixed'; t.style.opacity = '0';
+          document.body.appendChild(t);
+          t.select();
+          var ok = false;
+          try { ok = document.execCommand('copy'); } catch(e){}
+          document.body.removeChild(t);
+          if (ok){ done(); return; }
+          // last resort: the button becomes the message
+          var old = btn.textContent;
+          btn.textContent = 'houseofvestelle.com';
+          setTimeout(function(){ btn.textContent = old; }, 3200);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(url).then(done).catch(legacyCopy);
+        } else {
+          legacyCopy();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

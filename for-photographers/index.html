@@ -406,8 +406,8 @@
         var val = (input.value||'').trim();
         if(!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){ input.focus(); input.style.borderColor = '#c2603f'; return; }
         var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = 'One moment…';
-        if(FORM_ENDPOINT){ fetch(FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({email:val,source:'for-photographers'})}).catch(function(){}); }
-        form.closest('.form').classList.add('is-done');
+        if(FORM_ENDPOINT){ fetch(FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},keepalive:true,body:JSON.stringify({email:val,source:'for-photographers'})}).catch(function(){}); }
+        window.location.href = '/thank-you/';
       });
     });
     (function(){

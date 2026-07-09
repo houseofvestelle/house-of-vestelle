@@ -29,6 +29,9 @@ module.exports = async (req, res) => {
   const body = typeof req.body === 'string' ? safeParse(req.body) : (req.body || {});
   const email = (body.email || '').trim();
   const firstName = (body.firstName || '').trim();
+  // Photographer sign-ups (from /for-photographers/) get their own tag + source so
+  // the founding-studio list is separable from client early-access in GHL.
+  const isPhotographer = body.source === 'for-photographers';
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     res.status(400).json({ ok: false, error: 'Invalid email' });
@@ -48,7 +51,7 @@ module.exports = async (req, res) => {
         locationId,
         email,
         firstName: firstName || undefined,
-        tags: ['HOV'],
+        tags: isPhotographer ? ['HOV', 'HOV-photographer'] : ['HOV'],
         dnd: true, // block all outbound across every channel
         dndSettings: {
           Call:     { status: 'active', message: 'HOV early-access — silent list' },
@@ -58,7 +61,7 @@ module.exports = async (req, res) => {
           GMB:      { status: 'active', message: 'HOV early-access — silent list' },
           FB:       { status: 'active', message: 'HOV early-access — silent list' },
         },
-        source: 'Website — Early Access',
+        source: isPhotographer ? 'Website — For Photographers' : 'Website — Early Access',
       }),
     });
 

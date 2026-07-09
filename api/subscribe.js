@@ -38,6 +38,13 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // Honeypot: the forms include a hidden "company" field humans never fill.
+  // Bots do. Answer 200 (don't tip them off) but create nothing in GHL.
+  if (typeof body.company === 'string' && body.company.trim() !== '') {
+    res.status(200).json({ ok: true });
+    return;
+  }
+
   try {
     // Upsert (not create) so a repeat sign-up updates instead of erroring.
     const ghl = await fetch('https://services.leadconnectorhq.com/contacts/upsert', {

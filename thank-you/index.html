@@ -26,15 +26,18 @@
     min-height:100vh;
     color:var(--ink);
     font-family:'EB Garamond',Georgia,serif;
-    background:
-      radial-gradient(125% 85% at 50% -12%, #FFFEF9 0%, transparent 55%),
-      radial-gradient(100% 70% at 82% 112%, rgba(231,207,196,0.30) 0%, transparent 58%),
-      radial-gradient(90% 60% at 12% 105%, rgba(197,160,89,0.10) 0%, transparent 60%),
-      var(--ivory);
-    background-attachment:fixed;
+    background:var(--ivory);
     display:flex; flex-direction:column;
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
+  }
+  /* Champagne wash on a fixed layer (background-attachment:fixed is janky on iOS) */
+  .bgwash{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(125% 85% at 50% -12%, #FFFEF9 0%, transparent 55%),
+      radial-gradient(100% 70% at 82% 112%, rgba(231,207,196,0.30) 0%, transparent 58%),
+      radial-gradient(90% 60% at 12% 105%, rgba(197,160,89,0.10) 0%, transparent 60%);
   }
 
   /* Limewash grain overlay */
@@ -228,6 +231,7 @@
 </style>
 </head>
 <body>
+  <div class="bgwash"></div>
   <div class="grain"></div>
   <div class="petals" id="petals" aria-hidden="true"></div>
 

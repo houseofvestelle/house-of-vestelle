@@ -54,7 +54,7 @@
 
   .eyebrow{
     font-family:'Marcellus',serif; font-size:11.5px; letter-spacing:0.34em;
-    text-transform:uppercase; color:var(--gold-lo); padding-left:0.34em;
+    text-transform:uppercase; color:#8A6D2F; padding-left:0.34em; /* AA on ivory */
   }
   h2.sec{ font-family:'Italiana',serif; font-weight:400; font-size:clamp(32px,4.6vw,50px); line-height:1.08; margin:14px 0 0; }
   p.sub{ color:var(--sub); }
@@ -340,8 +340,11 @@
               <input type="text" id="firstName" name="firstName" placeholder="First name" autocomplete="given-name" aria-label="First name">
               <input type="email" id="email" name="email" placeholder="Your email address" autocomplete="email" required aria-label="Your email address">
             </div>
+            <!-- honeypot: humans never see or fill this -->
+            <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute; left:-9999px; height:0; width:0; border:0; padding:0;">
             <button class="btn" type="submit" id="submit">Request Invitation</button>
           </form>
+          <p class="note" id="emailErr" role="status" aria-live="polite" style="display:none; color:#a4452e;">Please enter a valid email address.</p>
           <p class="note">We'll be in touch as the house opens.</p>
         </div>
       </div>
@@ -371,12 +374,18 @@
     const email = document.getElementById('email');
     const button = document.getElementById('submit');
 
+    const emailErr = document.getElementById('emailErr');
+    email.addEventListener('input', function () {
+      email.style.borderBottomColor = '';
+      emailErr.style.display = 'none';
+    });
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
       const value = email.value.trim();
       if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
         email.focus();
         email.style.borderBottomColor = '#b4544a';
+        emailErr.style.display = 'block';
         return;
       }
       button.disabled = true;
@@ -386,7 +395,11 @@
           method: 'POST',
           headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
           keepalive: true,
-          body: JSON.stringify({ email: value, firstName: firstName.value.trim() })
+          body: JSON.stringify({
+            email: value,
+            firstName: firstName.value.trim(),
+            company: document.getElementById('company').value // honeypot
+          })
         });
       } catch (err) { /* never turn a guest away */ }
       window.location.href = '/thank-you/';

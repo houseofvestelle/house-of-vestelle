@@ -194,6 +194,9 @@
     font-family:var(--accent); font-weight:400;
   }
   h3, .step h3, .values h3{ font-family:var(--accent); font-weight:400; letter-spacing:0.04em; }
+  /* WCAG AA: small gold labels on light grounds need a deeper gold-ink */
+  .eyebrow, .tier .tag, .plans .note, .micro{ color:#8A6D2F; }
+  .em-cta .eyebrow{ color:var(--gold-hi); }
   summary{ font-family:var(--accent); font-weight:400; font-size:17.5px; letter-spacing:0.02em; }
   .thanks span{ font-family:var(--sans); }
   nav.bar .wm{ font-family:var(--serif); letter-spacing:0.05em; }
@@ -388,7 +391,7 @@
       <div class="eyebrow">The doors open in 2026</div>
       <h2>Be a founding studio.</h2>
       <p>We're hand-selecting the first studios to open with us — in first, free, and helping shape what House of Vestelle becomes. Leave your email and we'll bring your invitation to you.</p>
-      <div class="form em-cta">
+      <div class="form">
         <form class="js-signup" novalidate>
           <input type="email" placeholder="Your email" autocomplete="email" aria-label="Your email" required>
           <button class="btn gold" type="submit">Claim my invitation</button>
@@ -414,13 +417,26 @@
     // tagged HOV + HOV-photographer. Same origin, no CORS.
     const FORM_ENDPOINT = "/api/subscribe";
     document.querySelectorAll('form.js-signup').forEach(function(form){
+      // honeypot: humans never see or fill this
+      var hp = document.createElement('input');
+      hp.type = 'text'; hp.name = 'company'; hp.tabIndex = -1;
+      hp.autocomplete = 'off'; hp.setAttribute('aria-hidden','true');
+      hp.style.cssText = 'position:absolute;left:-9999px;height:0;width:0;border:0;padding:0;';
+      form.appendChild(hp);
+      // accessible error line (announced to screen readers, cleared on typing)
+      var err = document.createElement('p');
+      err.className = 'micro'; err.setAttribute('role','status'); err.setAttribute('aria-live','polite');
+      err.style.cssText = 'display:none;color:#a4452e;margin-top:10px;';
+      err.textContent = 'Please enter a valid email address.';
+      form.insertAdjacentElement('afterend', err);
+      var input = form.querySelector('input[type=email]');
+      input.addEventListener('input', function(){ input.style.borderColor = ''; err.style.display = 'none'; });
       form.addEventListener('submit', function(e){
         e.preventDefault();
-        var input = form.querySelector('input[type=email]');
         var val = (input.value||'').trim();
-        if(!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){ input.focus(); input.style.borderColor = '#c2603f'; return; }
+        if(!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){ input.focus(); input.style.borderColor = '#c2603f'; err.style.display = 'block'; return; }
         var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = 'One moment…';
-        if(FORM_ENDPOINT){ fetch(FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},keepalive:true,body:JSON.stringify({email:val,source:'for-photographers'})}).catch(function(){}); }
+        if(FORM_ENDPOINT){ fetch(FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},keepalive:true,body:JSON.stringify({email:val,source:'for-photographers',company:hp.value})}).catch(function(){}); }
         window.location.href = '/thank-you/';
       });
     });

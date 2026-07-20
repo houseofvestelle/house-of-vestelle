@@ -56,7 +56,8 @@
 
   /* ---------- journey ---------- */
   #journey { position:relative; }
-  .stage { position:sticky; top:0; height:100vh; height:100dvh; overflow:hidden; }
+  /* svh: constant during the iOS address-bar collapse — no mid-gesture reflow */
+  .stage { position:sticky; top:0; height:100vh; height:100svh; overflow:hidden; }
   .bgtint { position:absolute; inset:0; z-index:0; background:var(--ink); transition:background 1s var(--ease); }
 
   .scene { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
@@ -64,14 +65,16 @@
            transition:opacity .55s var(--ease), transform .55s var(--ease), visibility 0s linear .55s; }
   .scene.on { opacity:1; visibility:visible; transform:none; transition:opacity .55s var(--ease), transform .55s var(--ease), visibility 0s; }
   .scene.past { opacity:0; visibility:hidden; transform:translateY(-5vh); }
+  /* scrubbed pre-entry: the next scene rides in with the finger, no timers */
+  .scene.next { visibility:visible; opacity:var(--pre,0); transform:translateY(calc((1 - var(--pre,0)) * 9vh)); transition:none; }
 
   /* ---------- lace + grain (hero & finale) ---------- */
-  .lace { position:absolute; inset:-40%; z-index:1; opacity:.08; pointer-events:none;
+  .lace { position:absolute; inset:-12%; z-index:1; opacity:.08; pointer-events:none;
           background-image:radial-gradient(circle at 50% 50%, transparent 8px, rgba(233,211,166,.9) 8.6px, transparent 9.4px),
                            radial-gradient(circle at 0 0, transparent 8px, rgba(233,211,166,.7) 8.6px, transparent 9.4px),
                            radial-gradient(circle at 14px 14px, rgba(233,211,166,.55) 1.1px, transparent 1.8px);
           background-size:28px 28px; transform:rotate(-8deg); }
-  .grain { position:absolute; inset:0; z-index:2; opacity:.05; pointer-events:none; mix-blend-mode:overlay;
+  .grain { position:absolute; inset:0; z-index:2; opacity:.04; pointer-events:none;
            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E"); }
 
   /* ---------- hero — emerald salon, lace, centered ---------- */
@@ -219,6 +222,13 @@
   .switch { position:fixed; right:12px; bottom:44px; z-index:60; display:flex; gap:5px; background:rgba(250,246,238,.92); border:1px solid rgba(197,160,89,.45); border-radius:999px; padding:5px; }
   .switch a { font-size:10px; color:#5c5245; text-decoration:none; padding:6px 10px; border-radius:999px; }
   .switch a.on, .switch a:hover { background:rgba(197,160,89,.28); color:var(--ink); }
+
+  /* mobile: no live blur — big perf win on iPhones */
+  @media (max-width:940px) {
+    .tourchip { backdrop-filter:none; -webkit-backdrop-filter:none; background:rgba(20,16,12,.86); }
+    .qchip { backdrop-filter:none; -webkit-backdrop-filter:none; }
+    body.dark-scene .top-cta { backdrop-filter:none; -webkit-backdrop-filter:none; background:rgba(30,25,18,.62); }
+  }
 
   /* ---------- desktop ---------- */
   @media (min-width:941px) {
@@ -458,7 +468,10 @@
   const tcn = document.getElementById('tcn');
   const tcdots = Array.from(document.querySelectorAll('.tourchip .tcd i'));
 
-  function sizeJourney() { journey.style.height = (innerHeight + totalW * innerHeight * 0.92) + 'px'; }
+  // geometry frozen against the iOS toolbar collapse — unit re-measures only on width change
+  let unit = innerHeight, lastW = innerWidth;
+  function sizeJourney() { journey.style.height = (unit + totalW * unit * 0.92) + 'px'; }
+  const totalScroll = () => journey.offsetHeight - unit;
   sizeJourney();
 
   scenes.forEach((s,i) => {
@@ -466,7 +479,7 @@
     d.className = 'dot' + (i===0?' on':'');
     d.innerHTML = '<span class="tip">' + s.dataset.name + '</span>';
     d.addEventListener('click', () => {
-      const total = journey.offsetHeight - innerHeight;
+      const total = totalScroll();
       scrollTo({ top: journey.offsetTop + total * (bounds[i][0] + (bounds[i][1]-bounds[i][0]) * 0.55), behavior:'smooth' });
     });
     rail.appendChild(d);
@@ -628,7 +641,7 @@
   let ticking = false;
   function update() {
     ticking = false;
-    const total = journey.offsetHeight - innerHeight;
+    const total = totalScroll();
     if (total <= 0) return;
     const P = Math.min(Math.max((scrollY - journey.offsetTop) / total, 0), 1);
     jbar.style.width = (P*100).toFixed(2) + '%';
@@ -640,6 +653,10 @@
     // scroll-coupled exit: content lifts away with the finger over the last 28% of the band
     const ex = (i === N-1) ? 0 : Math.max(0, (p - 0.72) / 0.28);
     scenes[i].style.setProperty('--exit', ex.toFixed(4));
+    // scrub the next scene in with the same finger motion
+    const nx = (i + 1 < N) ? scenes[i+1] : null;
+    scenes.forEach(s => { if (s !== nx || ex === 0) s.classList.remove('next'); });
+    if (nx && ex > 0) { nx.classList.add('next'); nx.style.setProperty('--pre', ex.toFixed(4)); }
     if (drivers[i]) drivers[i](p);
   }
   // update synchronously on every scroll event — the work is a few style writes
@@ -657,7 +674,11 @@
     if (drivers[i]) setTimeout(() => drivers[i](p), 700);
   } else {
     addEventListener('scroll', onScroll, { passive:true });
-    addEventListener('resize', () => { sizeJourney(); onScroll(); });
+    addEventListener('resize', () => {
+      if (Math.abs(innerWidth - lastW) < 2) return;   // ignore iOS toolbar height-only resizes
+      lastW = innerWidth; unit = innerHeight;
+      sizeJourney(); onScroll();
+    });
     setScene(0); update();
   }
 })();

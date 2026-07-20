@@ -61,8 +61,8 @@
 
   .scene { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
            opacity:0; visibility:hidden; transform:translateY(6vh);
-           transition:opacity .7s var(--ease), transform .7s var(--ease), visibility 0s linear .7s; }
-  .scene.on { opacity:1; visibility:visible; transform:none; transition:opacity .7s var(--ease), transform .7s var(--ease), visibility 0s; }
+           transition:opacity .55s var(--ease), transform .55s var(--ease), visibility 0s linear .55s; }
+  .scene.on { opacity:1; visibility:visible; transform:none; transition:opacity .55s var(--ease), transform .55s var(--ease), visibility 0s; }
   .scene.past { opacity:0; visibility:hidden; transform:translateY(-5vh); }
 
   /* ---------- lace + grain (hero & finale) ---------- */
@@ -75,7 +75,9 @@
            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E"); }
 
   /* ---------- hero — emerald salon, lace, centered ---------- */
-  .s-hero .inner { position:relative; z-index:3; width:100%; text-align:center; padding:80px 26px 0; display:flex; flex-direction:column; align-items:center; }
+  /* scroll-coupled motion: gentle drift through the band, lift-away on exit */
+  .s-hero .inner { position:relative; z-index:3; width:100%; text-align:center; padding:80px 26px 0; display:flex; flex-direction:column; align-items:center;
+                   transform:translateY(calc(var(--p,0) * -3vh - var(--exit,0) * 10vh)); opacity:calc(1 - var(--exit,0) * .96); will-change:transform,opacity; }
   .s-hero .he { font-family:'Tenor Sans',sans-serif; font-size:10px; letter-spacing:.44em; text-transform:uppercase; color:rgba(233,223,201,.8); margin-bottom:18px; }
   .s-hero h1 { font-family:'Tenor Sans',sans-serif; font-weight:400; font-size:clamp(32px,9vw,64px); line-height:1.14; letter-spacing:.05em; text-transform:uppercase; color:#f2ead8; max-width:14ch; }
   .s-hero h1 em { font-style:normal; color:var(--gold); }
@@ -92,7 +94,9 @@
   .scene.on .hint { transition-delay:.5s; opacity:1; transform:none; }
 
   /* ---------- title cards (the tour guide speaks) ---------- */
-  .s-title .tcard { position:relative; z-index:3; text-align:center; padding:0 7vw; transform:scale(calc(.95 + .09 * var(--p, 0))); }
+  .s-title .tcard { position:relative; z-index:3; text-align:center; padding:0 7vw;
+                    transform:translateY(calc(var(--exit,0) * -7vh)) scale(calc(.95 + .09 * var(--p, 0)));
+                    opacity:calc(1 - var(--exit,0) * .92); will-change:transform,opacity; }
   .s-title .teye { font-family:'Tenor Sans',sans-serif; font-size:10px; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
   .s-title .ttl { font-family:'Tenor Sans',sans-serif; font-size:clamp(30px,8.6vw,64px); letter-spacing:.05em; text-transform:uppercase; line-height:1.16; color:#f6efe2; }
   .s-title .ttl em { font-style:normal; color:var(--gold); }
@@ -101,7 +105,8 @@
 
   /* ---------- the phone ---------- */
   .s-phone { flex-direction:column; gap:0; }
-  .phonewrap { position:relative; z-index:3; transform:scale(calc(.96 + .04 * var(--p,0))); }
+  .phonewrap { position:relative; z-index:3; transform:translateY(calc(var(--exit,0) * -6vh)) scale(calc(.96 + .04 * var(--p,0))); opacity:calc(1 - var(--exit,0) * .9); will-change:transform,opacity; }
+  .phonecap { transform:translateY(calc(var(--exit,0) * -6vh)); opacity:calc(1 - var(--exit,0)); }
   .phone { position:relative; width:min(76vw, 320px); height:min(72vh, 660px); border-radius:44px;
            background:#17130e; border:1px solid rgba(197,160,89,.55); box-shadow:0 40px 90px rgba(0,0,0,.55), inset 0 0 0 6px #17130e, inset 0 0 0 7px rgba(197,160,89,.25);
            padding:14px; }
@@ -632,6 +637,9 @@
     setScene(i);
     const p = Math.min(1, Math.max(0, (P - bounds[i][0]) / (bounds[i][1]-bounds[i][0])));
     scenes[i].style.setProperty('--p', p.toFixed(4));
+    // scroll-coupled exit: content lifts away with the finger over the last 28% of the band
+    const ex = (i === N-1) ? 0 : Math.max(0, (p - 0.72) / 0.28);
+    scenes[i].style.setProperty('--exit', ex.toFixed(4));
     if (drivers[i]) drivers[i](p);
   }
   // update synchronously on every scroll event — the work is a few style writes

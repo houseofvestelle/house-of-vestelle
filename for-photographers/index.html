@@ -73,10 +73,14 @@
   .micro{ font-size:14px; color:var(--sub); margin-top:14px; }
 
   /* Embedded application form (GoHighLevel) */
-  .formcard{ max-width:560px; margin:0 auto; background:var(--ivory); border:1px solid rgba(197,160,89,0.55);
-    border-radius:6px; padding:8px; box-shadow:0 18px 50px rgba(0,0,0,0.22); overflow:hidden;
-    min-height:582px; }   /* reserve the form's height so the card doesn't jump when it loads */
-  .formcard iframe{ display:block; width:100%; min-height:566px; border:none; border-radius:4px; background:var(--ivory); }
+  .formcard{ max-width:560px; margin:0 auto; background:#fff; border:1px solid rgba(197,160,89,0.55);
+    border-radius:6px; padding:8px; box-shadow:0 18px 50px rgba(0,0,0,0.22); overflow:hidden; }
+  /* Fixed height — the iframe can't size itself (see the note beside the embed).
+     Measured: the form renders 560px tall at desktop width and 640px on a phone, where
+     the consent paragraph wraps onto more lines. These leave ~40px of slack so nothing
+     clips; the spare white just reads as card padding. */
+  .formcard iframe{ display:block; width:100%; height:600px; border:none; border-radius:4px; background:#fff; }
+  @media (max-width:560px){ .formcard iframe{ height:700px; } }
 
   /* Value trio */
   .values{ background:var(--plaster); border-top:1px solid rgba(197,160,89,0.25); border-bottom:1px solid rgba(197,160,89,0.25); padding:56px 0; }
@@ -380,26 +384,17 @@
       <h2>Be a founding studio.</h2>
       <p>We're hand-selecting the first studios to open with us — in first, free, and helping shape what House of Vestelle becomes. Leave your details and we'll bring your invitation to you.</p>
       <div class="formcard">
+        <!-- The GoHighLevel "Photographers" form, rendered as a plain iframe.
+             We deliberately do NOT load link.msgsndr.com/js/form_embed.js: that script
+             hides the iframe on load and only un-hides it after its own handshake, and on
+             this page the handshake never completed — the form loaded but stayed invisible.
+             The only thing it adds is auto-height, which the CSS below sets instead. If you
+             ever change the form's fields, check the height still fits (see .formcard). -->
         <iframe
           src="https://api.leadconnectorhq.com/widget/form/FPMpkmdgnTWN5NtJ7cxk"
-          style="width:100%;height:100%;border:none;border-radius:4px"
           id="inline-FPMpkmdgnTWN5NtJ7cxk"
-          data-layout="{'id':'INLINE'}"
-          data-trigger-type="alwaysShow"
-          data-trigger-value=""
-          data-activation-type="alwaysActivated"
-          data-activation-value=""
-          data-deactivation-type="neverDeactivate"
-          data-deactivation-value=""
-          data-form-name="Photographers"
-          data-height="763"
-          data-layout-iframe-id="inline-FPMpkmdgnTWN5NtJ7cxk"
-          data-form-id="FPMpkmdgnTWN5NtJ7cxk"
-          title="Photographers"></iframe>
-        <!-- Keep this directly after the iframe and un-deferred — that's the placement
-             GoHighLevel ships. The script wraps the iframe, keeps it hidden, and un-hides
-             it once the form posts back its height. -->
-        <script src="https://link.msgsndr.com/js/form_embed.js"></script>
+          title="Photographers — House of Vestelle founding studio sign-up"
+          loading="lazy"></iframe>
       </div>
     </div>
   </section>

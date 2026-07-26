@@ -68,20 +68,14 @@
   .hero .sub{ font-size:19px; line-height:1.65; color:var(--ink); margin:24px 0 30px; max-width:520px; }
   .hero .photo{ height:520px; }
 
-  /* Sign-up form */
+  /* Hero call-to-action */
   .form{ max-width:480px; }
-  form.js-signup{ display:flex; gap:10px; }
-  form.js-signup input{ flex:1; min-width:0; font-family:var(--sans); font-size:16px; color:var(--ink); background:#fff;
-    border:1px solid rgba(197,160,89,0.5); border-radius:3px; padding:14px 15px; outline:none; transition:border-color .2s, box-shadow .2s; }
-  form.js-signup input::placeholder{ color:var(--sub); }
-  form.js-signup input:focus{ border-color:var(--gold); box-shadow:0 0 0 3px rgba(197,160,89,0.16); }
-  form.js-signup button{ flex:none; }
   .micro{ font-size:14px; color:var(--sub); margin-top:14px; }
-  .thanks{ display:none; font-family:var(--serif); font-size:22px; color:var(--ink); }
-  .thanks span{ display:block; font-family:var(--sans); font-size:15.5px; color:var(--sub); margin-top:6px; }
-  .form.is-done form, .form.is-done .micro{ display:none; }
-  .form.is-done .thanks{ display:block; }
-  .em-cta .thanks{ color:var(--gold-hi); } .em-cta .thanks span{ color:rgba(231,207,196,0.8); }
+
+  /* Embedded application form (GoHighLevel) */
+  .formcard{ max-width:560px; margin:0 auto; background:var(--ivory); border:1px solid rgba(197,160,89,0.55);
+    border-radius:6px; padding:8px; box-shadow:0 18px 50px rgba(0,0,0,0.22); overflow:hidden; }
+  .formcard iframe{ display:block; width:100%; min-height:720px; border:none; border-radius:4px; background:var(--ivory); }
 
   /* Value trio */
   .values{ background:var(--plaster); border-top:1px solid rgba(197,160,89,0.25); border-bottom:1px solid rgba(197,160,89,0.25); padding:56px 0; }
@@ -157,8 +151,6 @@
   .em-cta h2{ color:#F4ECDD; font-size:clamp(32px,4.6vw,54px); margin:14px 0 0; }
   .em-cta p{ color:rgba(244,236,221,0.85); max-width:560px; margin:18px auto 30px; font-size:18px; }
   .em-cta .form{ margin:0 auto; }
-  .em-cta form.js-signup input{ background:rgba(255,255,255,0.06); border-color:rgba(197,160,89,0.55); color:var(--ivory); }
-  .em-cta form.js-signup input::placeholder{ color:rgba(244,236,221,0.6); }
 
   /* Footer */
   footer{ background:var(--ink); color:var(--ivory); text-align:center; padding:40px 24px; }
@@ -185,7 +177,7 @@
     .wrap{ padding:0 24px; }
     nav.bar{ padding:14px 24px; } nav.bar .hide{ display:none; }
   }
-  @media (max-width:520px){ form.js-signup{ flex-direction:column; } form.js-signup button{ width:100%; padding:14px; } }
+  @media (max-width:520px){ .form .btn{ display:block; width:100%; text-align:center; padding:14px; } .formcard{ padding:6px; } }
 
   /* ---- Orangerie brand-font alignment (Italiana / EB Garamond / Marcellus) ---- */
   h1,h2{ font-weight:400; }                       /* Italiana ships one weight */
@@ -198,7 +190,6 @@
   .eyebrow, .tier .tag, .plans .note, .micro{ color:#8A6D2F; }
   .em-cta .eyebrow{ color:var(--gold-hi); }
   summary{ font-family:var(--accent); font-weight:400; font-size:17.5px; letter-spacing:0.02em; }
-  .thanks span{ font-family:var(--sans); }
   nav.bar .wm{ font-family:var(--serif); letter-spacing:0.05em; }
 </style>
 </head>
@@ -218,12 +209,8 @@
           <h1>A personal stylist for every client you photograph.</h1>
           <p class="sub">House of Vestelle is a private styling concierge for your studio. Send one link, and your client receives a personalized wardrobe lookbook — curated to her body, her taste, and the way you shoot. No closet to build. No shoot-day surprises. Just clients who arrive ready.</p>
           <div class="form">
-            <form class="js-signup" novalidate>
-              <input type="email" placeholder="Your email" autocomplete="email" aria-label="Your email" required>
-              <button class="btn" type="submit">Join the founding studios</button>
-            </form>
+            <a class="btn" href="#join">Join the founding studios</a>
             <p class="micro">Free for founding studios — invitations are limited.</p>
-            <p class="thanks">You're on the founding list.<span>We'll bring your invitation to you.</span></p>
           </div>
         </div>
         <div class="photo tall em"><img src="/images/hero.jpg" alt="A House of Vestelle client, styled" decoding="async"></div>
@@ -390,13 +377,24 @@
     <div class="wrap">
       <div class="eyebrow">The doors open in 2026</div>
       <h2>Be a founding studio.</h2>
-      <p>We're hand-selecting the first studios to open with us — in first, free, and helping shape what House of Vestelle becomes. Leave your email and we'll bring your invitation to you.</p>
-      <div class="form">
-        <form class="js-signup" novalidate>
-          <input type="email" placeholder="Your email" autocomplete="email" aria-label="Your email" required>
-          <button class="btn gold" type="submit">Claim my invitation</button>
-        </form>
-        <p class="thanks">You're on the founding list.<span>We'll be in touch with your invitation.</span></p>
+      <p>We're hand-selecting the first studios to open with us — in first, free, and helping shape what House of Vestelle becomes. Tell us about your studio and we'll bring your invitation to you.</p>
+      <div class="formcard">
+        <iframe
+          src="https://api.leadconnectorhq.com/widget/form/LjGyJmPNAgLDSPQJuqh7"
+          style="width:100%;height:100%;border:none;border-radius:4px"
+          id="inline-LjGyJmPNAgLDSPQJuqh7"
+          data-layout="{'id':'INLINE'}"
+          data-trigger-type="alwaysShow"
+          data-trigger-value=""
+          data-activation-type="alwaysActivated"
+          data-activation-value=""
+          data-deactivation-type="neverDeactivate"
+          data-deactivation-value=""
+          data-form-name="Founding Studio Application"
+          data-height="720"
+          data-layout-iframe-id="inline-LjGyJmPNAgLDSPQJuqh7"
+          data-form-id="LjGyJmPNAgLDSPQJuqh7"
+          title="Founding Studio Application"></iframe>
       </div>
     </div>
   </section>
@@ -412,34 +410,11 @@
     <div class="cr">© 2026 House of Vestelle</div>
   </footer>
 
+  <!-- Founding-studio applications are collected by the GoHighLevel form embedded above
+       (House of Vestelle sub-account). This script auto-sizes the iframe to its content. -->
+  <script src="https://link.msgsndr.com/js/form_embed.js" defer></script>
+
   <script>
-    // Founding-studio sign-ups → our own catcher (api/subscribe.js) → GoHighLevel,
-    // tagged HOV + HOV-photographer. Same origin, no CORS.
-    const FORM_ENDPOINT = "/api/subscribe";
-    document.querySelectorAll('form.js-signup').forEach(function(form){
-      // honeypot: humans never see or fill this
-      var hp = document.createElement('input');
-      hp.type = 'text'; hp.name = 'company'; hp.tabIndex = -1;
-      hp.autocomplete = 'off'; hp.setAttribute('aria-hidden','true');
-      hp.style.cssText = 'position:absolute;left:-9999px;height:0;width:0;border:0;padding:0;';
-      form.appendChild(hp);
-      // accessible error line (announced to screen readers, cleared on typing)
-      var err = document.createElement('p');
-      err.className = 'micro'; err.setAttribute('role','status'); err.setAttribute('aria-live','polite');
-      err.style.cssText = 'display:none;color:#a4452e;margin-top:10px;';
-      err.textContent = 'Please enter a valid email address.';
-      form.insertAdjacentElement('afterend', err);
-      var input = form.querySelector('input[type=email]');
-      input.addEventListener('input', function(){ input.style.borderColor = ''; err.style.display = 'none'; });
-      form.addEventListener('submit', function(e){
-        e.preventDefault();
-        var val = (input.value||'').trim();
-        if(!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){ input.focus(); input.style.borderColor = '#c2603f'; err.style.display = 'block'; return; }
-        var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = 'One moment…';
-        if(FORM_ENDPOINT){ fetch(FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},keepalive:true,body:JSON.stringify({email:val,source:'for-photographers',company:hp.value})}).catch(function(){}); }
-        window.location.href = '/thank-you/';
-      });
-    });
     (function(){
       var sel = '.hero .eyebrow,.hero h1,.hero .sub,.hero .form,.hero .photo,'
         + '.values .grid>div,'
@@ -448,7 +423,7 @@
         + '.show .eyebrow,.show h2,.show .sub,.show .cards>.lookcard,'
         + '.plans .eyebrow,.plans h2,.plans .sub,.plans .note,.plans .tiers>.tier,'
         + '.faq .head .eyebrow,.faq h2,.faq details,'
-        + '.em-cta .eyebrow,.em-cta h2,.em-cta p,.em-cta .form';
+        + '.em-cta .eyebrow,.em-cta h2,.em-cta p,.em-cta .formcard';
       if(matchMedia('(prefers-reduced-motion: reduce)').matches){ return; }
       var els = [].slice.call(document.querySelectorAll(sel));
       els.forEach(function(el){ el.classList.add('rise'); });
